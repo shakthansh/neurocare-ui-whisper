@@ -1,9 +1,10 @@
-
 import TestCard from "./TestCard";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const TestSection = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleMBTIStart = () => {
     toast({
@@ -11,7 +12,7 @@ const TestSection = () => {
       description: "Your personality journey begins now...",
       duration: 3000,
     });
-    // Future: Navigate to MBTI test page
+    navigate("/mbti-test");
     console.log("Starting MBTI test...");
   };
 
