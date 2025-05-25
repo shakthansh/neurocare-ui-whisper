@@ -1,10 +1,9 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Download, Share2 } from "lucide-react";
+import { ArrowLeft, Download, Share2, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { calculateMBTI, MBTIResult } from "@/utils/mbtiCalculator";
 import { useToast } from "@/hooks/use-toast";
 
@@ -33,7 +32,7 @@ const MBTIResultPage = () => {
   const handleShare = async () => {
     if (!result) return;
 
-    const shareText = `I just discovered I'm an ${result.type}! ${result.description}`;
+    const shareText = `I just discovered I'm ${result.type} - ${result.nickname}! ${result.description} #NeuroCareMBTI #KnowYourself #PersonalityTest`;
     
     if (navigator.share) {
       try {
@@ -46,7 +45,6 @@ const MBTIResultPage = () => {
         console.log('Share cancelled');
       }
     } else {
-      // Fallback to clipboard
       navigator.clipboard.writeText(shareText);
       toast({
         title: "Copied to clipboard!",
@@ -58,8 +56,13 @@ const MBTIResultPage = () => {
   const handleDownload = () => {
     toast({
       title: "Feature coming soon!",
-      description: "Screenshot download will be available soon",
+      description: "Instagram Story download will be available soon",
     });
+  };
+
+  const handleRetakeTest = () => {
+    localStorage.removeItem('mbtiAnswers');
+    navigate('/mbti-test');
   };
 
   if (!result) {
@@ -96,42 +99,63 @@ const MBTIResultPage = () => {
               <span className="text-4xl font-bold text-white">{result.type}</span>
             </div>
             <CardTitle className="text-2xl text-neuro-primary mb-2">
-              {result.description.split(' - ')[0]}
+              {result.nickname}
             </CardTitle>
             <p className="text-gray-600 leading-relaxed">
-              {result.description.split(' - ')[1]}
+              {result.description}
             </p>
           </CardHeader>
         </Card>
 
-        {/* Strengths */}
-        <Card className="mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <CardHeader>
-            <CardTitle className="text-lg text-neuro-primary">✨ Your Strengths</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {result.strengths.map((strength, index) => (
-                <li key={index} className="flex items-center text-gray-700">
-                  <div className="w-2 h-2 bg-neuro-accent rounded-full mr-3"></div>
-                  {strength}
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
+        {/* Strengths & Challenges */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <Card className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <CardHeader>
+              <CardTitle className="text-lg text-neuro-primary">✨ Your Strengths</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2">
+                {result.strengths.map((strength, index) => (
+                  <li key={index} className="flex items-center text-gray-700">
+                    <div className="w-2 h-2 bg-neuro-accent rounded-full mr-3"></div>
+                    {strength}
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
 
-        {/* Challenges */}
-        <Card className="mb-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <Card className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <CardHeader>
+              <CardTitle className="text-lg text-neuro-primary">🎯 Growth Areas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2">
+                {result.challenges.map((challenge, index) => (
+                  <li key={index} className="flex items-center text-gray-700">
+                    <div className="w-2 h-2 bg-neuro-coral rounded-full mr-3"></div>
+                    {challenge}
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Tips Section */}
+        <Card className="mb-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
           <CardHeader>
-            <CardTitle className="text-lg text-neuro-primary">🎯 Growth Areas</CardTitle>
+            <CardTitle className="text-lg text-neuro-primary flex items-center">
+              <Lightbulb className="h-5 w-5 mr-2" />
+              Personalized Tips
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
-              {result.challenges.map((challenge, index) => (
+              {result.tips.map((tip, index) => (
                 <li key={index} className="flex items-center text-gray-700">
-                  <div className="w-2 h-2 bg-neuro-coral rounded-full mr-3"></div>
-                  {challenge}
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full mr-3"></div>
+                  {tip}
                 </li>
               ))}
             </ul>
@@ -139,7 +163,7 @@ const MBTIResultPage = () => {
         </Card>
 
         {/* Famous People */}
-        <Card className="mb-8 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+        <Card className="mb-8 animate-fade-in" style={{ animationDelay: '0.4s' }}>
           <CardHeader>
             <CardTitle className="text-lg text-neuro-primary">🌟 Famous {result.type}s</CardTitle>
           </CardHeader>
@@ -158,12 +182,12 @@ const MBTIResultPage = () => {
         </Card>
 
         {/* Share Section */}
-        <Card className="mb-8 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+        <Card className="mb-8 animate-fade-in" style={{ animationDelay: '0.5s' }}>
           <CardHeader>
             <CardTitle className="text-lg text-neuro-primary">📱 Share Your Result</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex gap-4">
+            <div className="flex gap-4 mb-4">
               <Button 
                 onClick={handleShare}
                 className="flex-1 bg-gradient-to-r from-primary-light to-neuro-primary hover:from-neuro-primary hover:to-primary-light text-white"
@@ -177,20 +201,29 @@ const MBTIResultPage = () => {
                 className="flex-1 border-neuro-accent text-neuro-primary hover:bg-neuro-accent hover:text-white"
               >
                 <Download className="h-4 w-4 mr-2" />
-                Download
+                Instagram Story
               </Button>
             </div>
+            <p className="text-xs text-gray-500 text-center">
+              #NeuroCareMBTI #KnowYourself #PersonalityTest
+            </p>
           </CardContent>
         </Card>
 
-        {/* Call to Action */}
-        <div className="text-center animate-fade-in" style={{ animationDelay: '0.5s' }}>
+        {/* Call to Actions */}
+        <div className="flex flex-col gap-4 animate-fade-in" style={{ animationDelay: '0.6s' }}>
           <Button
-            onClick={() => navigate('/')}
+            onClick={handleRetakeTest}
             variant="outline"
             className="border-neuro-primary text-neuro-primary hover:bg-neuro-primary hover:text-white"
           >
-            Take Another Test
+            Retake Test
+          </Button>
+          <Button
+            onClick={() => navigate('/')}
+            className="bg-gradient-to-r from-primary-light to-neuro-primary hover:from-neuro-primary hover:to-primary-light text-white"
+          >
+            Explore More Personality Tests
           </Button>
         </div>
       </div>

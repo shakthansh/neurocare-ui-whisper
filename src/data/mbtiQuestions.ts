@@ -7,41 +7,43 @@ export interface MBTIQuestion {
 }
 
 export const mbtiQuestions: MBTIQuestion[] = [
-  // Extraversion vs Introversion (EI)
-  { id: 1, text: "I enjoy being the center of attention at social gatherings.", dimension: 'EI' },
-  { id: 2, text: "I prefer working alone rather than in a team.", dimension: 'EI', reverse: true },
-  { id: 3, text: "I feel energized after spending time with a large group of people.", dimension: 'EI' },
-  { id: 4, text: "I need quiet time to recharge after social interactions.", dimension: 'EI', reverse: true },
-  { id: 5, text: "I often speak before thinking things through.", dimension: 'EI' },
-  { id: 6, text: "I prefer to think carefully before speaking in meetings.", dimension: 'EI', reverse: true },
-  { id: 7, text: "I make friends easily in new environments.", dimension: 'EI' },
-  { id: 8, text: "I prefer having a few close friends rather than many acquaintances.", dimension: 'EI', reverse: true },
-
-  // Sensing vs Intuition (SN)
-  { id: 9, text: "I focus on concrete facts and details when making decisions.", dimension: 'SN', reverse: true },
-  { id: 10, text: "I enjoy exploring new possibilities and future potential.", dimension: 'SN' },
-  { id: 11, text: "I prefer practical, hands-on learning over theoretical concepts.", dimension: 'SN', reverse: true },
-  { id: 12, text: "I often get lost in my imagination and ideas.", dimension: 'SN' },
-  { id: 13, text: "I value tradition and established ways of doing things.", dimension: 'SN', reverse: true },
-  { id: 14, text: "I enjoy brainstorming and generating creative solutions.", dimension: 'SN' },
-  { id: 15, text: "I prefer step-by-step instructions over general guidelines.", dimension: 'SN', reverse: true },
-  { id: 16, text: "I'm more interested in the big picture than specific details.", dimension: 'SN' },
-
-  // Thinking vs Feeling (TF)
-  { id: 17, text: "I make decisions based on logical analysis rather than personal values.", dimension: 'TF', reverse: true },
-  { id: 18, text: "I consider how my decisions will affect other people's feelings.", dimension: 'TF' },
-  { id: 19, text: "I believe being honest is more important than being tactful.", dimension: 'TF', reverse: true },
-  { id: 20, text: "I try to maintain harmony in my relationships.", dimension: 'TF' },
-  { id: 21, text: "I critique ideas objectively, even if it might hurt someone's feelings.", dimension: 'TF', reverse: true },
-  { id: 22, text: "I'm naturally empathetic and sensitive to others' emotions.", dimension: 'TF' },
-  { id: 23, text: "I value fairness and justice over compassion.", dimension: 'TF', reverse: true },
-  { id: 24, text: "I often put others' needs before my own.", dimension: 'TF' },
-
-  // Judging vs Perceiving (JP)
-  { id: 25, text: "I prefer to plan my day in advance rather than be spontaneous.", dimension: 'JP', reverse: true },
-  { id: 26, text: "I enjoy keeping my options open and being flexible.", dimension: 'JP' },
-  { id: 27, text: "I feel stressed when I have too many unfinished tasks.", dimension: 'JP', reverse: true },
-  { id: 28, text: "I work well under pressure and close to deadlines.", dimension: 'JP' },
-  { id: 29, text: "I like to have a clear schedule and stick to it.", dimension: 'JP', reverse: true },
-  { id: 30, text: "I enjoy exploring different approaches to solve problems.", dimension: 'JP' }
+  // Questions 1,3,5,21,28,29 relate to I/E (lower scores mean Extroversion)
+  { id: 1, text: "I prefer quiet time alone to recharge rather than social gatherings.", dimension: 'EI' },
+  { id: 2, text: "I find it easy to start conversations with strangers.", dimension: 'EI', reverse: true },
+  { id: 3, text: "I often think before I speak.", dimension: 'EI' },
+  { id: 4, text: "I enjoy being the center of attention.", dimension: 'EI', reverse: true },
+  { id: 5, text: "I prefer deep conversations over small talk.", dimension: 'EI' },
+  
+  // Questions 6,8,10,23,25 relate to Sensing vs 7,9,24,30 for Intuition
+  { id: 6, text: "I trust facts and details more than theories and ideas.", dimension: 'SN', reverse: true },
+  { id: 7, text: "I often think about future possibilities more than present realities.", dimension: 'SN' },
+  { id: 8, text: "I prefer practical tasks to imaginative brainstorming.", dimension: 'SN', reverse: true },
+  { id: 9, text: "I enjoy abstract concepts and symbolism.", dimension: 'SN' },
+  { id: 10, text: "I focus on what is happening now rather than what might happen later.", dimension: 'SN', reverse: true },
+  
+  // Questions 11,13,15,17,27 relate to Thinking vs 12,14,26,29 for Feeling
+  { id: 11, text: "I make decisions based on logic rather than emotions.", dimension: 'TF', reverse: true },
+  { id: 12, text: "I value harmony and try to avoid conflict.", dimension: 'TF' },
+  { id: 13, text: "I can be very objective, even if it hurts someone's feelings.", dimension: 'TF', reverse: true },
+  { id: 14, text: "I consider others' feelings when making decisions.", dimension: 'TF' },
+  { id: 15, text: "I believe truth is more important than tact.", dimension: 'TF', reverse: true },
+  
+  // Questions 16,18,20,23,25 relate to Judging vs 19,21,24,28 for Perceiving
+  { id: 16, text: "I like to have a plan rather than be spontaneous.", dimension: 'JP', reverse: true },
+  { id: 17, text: "I prefer to keep my options open as long as possible.", dimension: 'TF', reverse: true },
+  { id: 18, text: "I like to finish tasks well before the deadline.", dimension: 'JP', reverse: true },
+  { id: 19, text: "I adapt easily to changes in plans.", dimension: 'JP' },
+  { id: 20, text: "I feel uncomfortable when things are unorganized.", dimension: 'JP', reverse: true },
+  
+  { id: 21, text: "I enjoy solving complex problems more than socializing.", dimension: 'EI' },
+  { id: 22, text: "I trust my gut feelings more than logical analysis.", dimension: 'TF' },
+  { id: 23, text: "I am usually punctual and value schedules.", dimension: 'JP', reverse: true },
+  { id: 24, text: "I like exploring new ideas, even if they seem impractical.", dimension: 'JP' },
+  { id: 25, text: "I prefer to work in a structured environment.", dimension: 'JP', reverse: true },
+  
+  { id: 26, text: "I often put others' needs before my own.", dimension: 'TF' },
+  { id: 27, text: "I enjoy debating ideas to find the best answer.", dimension: 'TF', reverse: true },
+  { id: 28, text: "I feel energized after spending time with friends.", dimension: 'EI', reverse: true },
+  { id: 29, text: "I often reflect on my emotions deeply.", dimension: 'TF' },
+  { id: 30, text: "I prefer to keep things flexible and open-ended.", dimension: 'JP' }
 ];
