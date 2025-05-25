@@ -16,6 +16,8 @@ serve(async (req) => {
     const { answers, type } = await req.json();
     const apiKey = 'AIzaSyCYEPPtZ59X7W0CbVzYNChgObjNwRQknFU';
 
+    console.log('Received request:', { type, answers: typeof answers });
+
     // Create prompt for Gemini based on user answers
     let prompt = '';
     
@@ -72,6 +74,8 @@ Return only the 4-letter type, nothing else.`;
 User message: ${answers}`;
     }
 
+    console.log('Sending request to Gemini API...');
+
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {
@@ -90,8 +94,25 @@ User message: ${answers}`;
       }),
     });
 
+    console.log('Gemini API response status:', response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Gemini API error response:', errorText);
+      throw new Error(`Gemini API error: ${response.status} - ${errorText}`);
+    }
+
     const data = await response.json();
+    console.log('Gemini API response data:', JSON.stringify(data, null, 2));
+
+    // Check if response has the expected structure
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts || !data.candidates[0].content.parts[0]) {
+      console.error('Unexpected Gemini API response structure:', data);
+      throw new Error('Invalid response structure from Gemini API');
+    }
+
     const result = data.candidates[0].content.parts[0].text.trim();
+    console.log('Extracted result:', result);
 
     return new Response(JSON.stringify({ result }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
