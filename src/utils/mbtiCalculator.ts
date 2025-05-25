@@ -1,5 +1,6 @@
+
 import { mbtiQuestions } from "@/data/mbtiQuestions";
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from "@/integrations/supabase/client";
 
 export interface MBTIResult {
   type: string;
@@ -147,11 +148,6 @@ const mbtiProfiles: Record<string, Omit<MBTIResult, 'type' | 'dimensions'>> = {
     tips: ["Practice patience", "Listen actively", "Be open to others' ideas"]
   }
 };
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
 
 export async function calculateMBTI(answers: Record<number, number>): Promise<MBTIResult> {
   try {
