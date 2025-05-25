@@ -1,5 +1,5 @@
-
 import { mbtiQuestions } from "@/data/mbtiQuestions";
+import { createClient } from '@supabase/supabase-js';
 
 export interface MBTIResult {
   type: string;
@@ -148,7 +148,81 @@ const mbtiProfiles: Record<string, Omit<MBTIResult, 'type' | 'dimensions'>> = {
   }
 };
 
-export function calculateMBTI(answers: Record<number, number>): MBTIResult {
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
+
+export async function calculateMBTI(answers: Record<number, number>): Promise<MBTIResult> {
+  try {
+    console.log('Sending answers to Gemini for analysis:', answers);
+    
+    // Use Gemini AI to determine personality type
+    const { data, error } = await supabase.functions.invoke('gemini-personality', {
+      body: { answers, type: 'assessment' }
+    });
+
+    if (error) {
+      console.error('Gemini API error:', error);
+      throw error;
+    }
+
+    const geminiType = data.result.replace(/[^A-Z]/g, ''); // Clean response to get just letters
+    console.log('Gemini determined type:', geminiType);
+
+    // Validate the type is a real MBTI type
+    const validTypes = Object.keys(mbtiProfiles);
+    const type = validTypes.includes(geminiType) ? geminiType : 'INTJ'; // Fallback
+
+    const profile = mbtiProfiles[type];
+
+    // Calculate basic dimension scores for display
+    const scores = { I: 0, E: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+    const counts = { I: 0, E: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+
+    // Simple scoring for display purposes
+    Object.entries(answers).forEach(([questionId, answer]) => {
+      const id = parseInt(questionId);
+      if ([1,3,5,21].includes(id)) { scores.I += answer; counts.I++; }
+      if ([2,4,28].includes(id)) { scores.E += answer; counts.E++; }
+      if ([6,8,10,23,25].includes(id)) { scores.S += answer; counts.S++; }
+      if ([7,9,24,30].includes(id)) { scores.N += answer; counts.N++; }
+      if ([11,13,15,27].includes(id)) { scores.T += answer; counts.T++; }
+      if ([12,14,22,26,29].includes(id)) { scores.F += answer; counts.F++; }
+      if ([16,18,20].includes(id)) { scores.J += answer; counts.J++; }
+      if ([17,19,30].includes(id)) { scores.P += answer; counts.P++; }
+    });
+
+    return {
+      type,
+      ...profile,
+      dimensions: {
+        EI: { 
+          score: Math.round((scores.E / (counts.E || 1) / (scores.I / (counts.I || 1) + scores.E / (counts.E || 1))) * 100) || 50, 
+          preference: type[0] as 'E' | 'I' 
+        },
+        SN: { 
+          score: Math.round((scores.S / (counts.S || 1) / (scores.S / (counts.S || 1) + scores.N / (counts.N || 1))) * 100) || 50, 
+          preference: type[1] as 'S' | 'N' 
+        },
+        TF: { 
+          score: Math.round((scores.T / (counts.T || 1) / (scores.T / (counts.T || 1) + scores.F / (counts.F || 1))) * 100) || 50, 
+          preference: type[2] as 'T' | 'F' 
+        },
+        JP: { 
+          score: Math.round((scores.J / (counts.J || 1) / (scores.J / (counts.J || 1) + scores.P / (counts.P || 1))) * 100) || 50, 
+          preference: type[3] as 'J' | 'P' 
+        }
+      }
+    };
+  } catch (error) {
+    console.error('Error calculating MBTI with Gemini:', error);
+    // Fallback to basic calculation if Gemini fails
+    return calculateBasicMBTI(answers);
+  }
+}
+
+function calculateBasicMBTI(answers: Record<number, number>): MBTIResult {
   // Initialize dimension scores
   const scores = {
     I: 0, E: 0,

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Download, Share2, Lightbulb } from "lucide-react";
@@ -6,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { calculateMBTI, MBTIResult } from "@/utils/mbtiCalculator";
 import { useToast } from "@/hooks/use-toast";
+import NeuroChat from "@/components/NeuroChat";
 
 const MBTIResultPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [result, setResult] = useState<MBTIResult | null>(null);
+  const [isCalculating, setIsCalculating] = useState(true);
 
   useEffect(() => {
     const savedAnswers = localStorage.getItem('mbtiAnswers');
@@ -19,15 +20,28 @@ const MBTIResultPage = () => {
       return;
     }
 
-    try {
-      const answers = JSON.parse(savedAnswers);
-      const mbtiResult = calculateMBTI(answers);
-      setResult(mbtiResult);
-    } catch (error) {
-      console.error('Error calculating MBTI result:', error);
-      navigate('/mbti-test');
-    }
-  }, [navigate]);
+    const processResults = async () => {
+      try {
+        const answers = JSON.parse(savedAnswers);
+        console.log('Processing MBTI answers with Gemini AI...');
+        const mbtiResult = await calculateMBTI(answers);
+        console.log('MBTI result calculated:', mbtiResult);
+        setResult(mbtiResult);
+      } catch (error) {
+        console.error('Error calculating MBTI result:', error);
+        toast({
+          title: "Error calculating results",
+          description: "Please try taking the test again.",
+          variant: "destructive",
+        });
+        navigate('/mbti-test');
+      } finally {
+        setIsCalculating(false);
+      }
+    };
+
+    processResults();
+  }, [navigate, toast]);
 
   const handleShare = async () => {
     if (!result) return;
@@ -65,12 +79,26 @@ const MBTIResultPage = () => {
     navigate('/mbti-test');
   };
 
-  if (!result) {
+  if (isCalculating) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-neuro-background to-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-neuro-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Calculating your personality type...</p>
+          <p className="text-gray-600">Analyzing your personality with AI...</p>
+          <p className="text-sm text-gray-500 mt-2">This may take a moment</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!result) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-neuro-background to-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">Unable to calculate results</p>
+          <Button onClick={() => navigate('/mbti-test')} className="mt-4">
+            Try Again
+          </Button>
         </div>
       </div>
     );
@@ -90,6 +118,13 @@ const MBTIResultPage = () => {
             <ArrowLeft className="h-6 w-6 text-neuro-primary" />
           </Button>
           <h1 className="text-2xl font-bold text-neuro-primary">Your MBTI Result</h1>
+        </div>
+
+        {/* AI Analysis Badge */}
+        <div className="mb-6 text-center">
+          <span className="bg-gradient-to-r from-green-100 to-blue-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+            ✨ AI-Powered Analysis by Gemini
+          </span>
         </div>
 
         {/* Main Result Card */}
@@ -227,6 +262,9 @@ const MBTIResultPage = () => {
           </Button>
         </div>
       </div>
+
+      {/* NeuroChat AI Assistant */}
+      <NeuroChat personalityType={result.type} />
     </div>
   );
 };
