@@ -22,7 +22,7 @@ serve(async (req) => {
     let prompt = '';
     
     if (type === 'assessment') {
-      prompt = `Based on these MBTI test responses (1=Strongly Disagree, 5=Strongly Agree), determine the most accurate MBTI personality type:
+      prompt = `Based on these MBTI test responses (1=Strongly Disagree, 5=Strongly Agree), determine the most accurate MBTI personality type and provide comprehensive personality analysis:
 
 ${Object.entries(answers).map(([questionId, answer], index) => {
   const questions = [
@@ -60,13 +60,24 @@ ${Object.entries(answers).map(([questionId, answer], index) => {
   return `Q${parseInt(questionId)}: ${questions[parseInt(questionId) - 1]} - Answer: ${answer}`;
 }).join('\n')}
 
-Analyze these responses and return ONLY the 4-letter MBTI type (like INTJ, ENFP, etc.) that best matches this person's answers. Consider:
-- Questions 1,3,5,21 lean toward Introversion, 2,4,28 toward Extroversion
+Analyze these responses and provide a comprehensive personality analysis in the following JSON format:
+{
+  "type": "FOUR_LETTER_TYPE",
+  "nickname": "The Personality Nickname",
+  "description": "Detailed description of this personality type",
+  "strengths": ["strength1", "strength2", "strength3", "strength4", "strength5"],
+  "challenges": ["challenge1", "challenge2", "challenge3", "challenge4"],
+  "famousPeople": ["person1", "person2", "person3"],
+  "tips": ["tip1", "tip2", "tip3", "tip4"]
+}
+
+Make sure to:
+- Analyze the responses carefully considering that Questions 1,3,5,21,29 lean toward Introversion, 2,4,28 toward Extroversion
 - Questions 6,8,10,23,25 lean toward Sensing, 7,9,24,30 toward Intuition  
 - Questions 11,13,15,27 lean toward Thinking, 12,14,22,26,29 toward Feeling
 - Questions 16,18,20,23,25 lean toward Judging, 17,19,24,30 toward Perceiving
-
-Return only the 4-letter type, nothing else.`;
+- Provide accurate personality insights based on the actual responses
+- Return ONLY valid JSON, no additional text`;
     } else {
       // Chat mode
       prompt = `You are NeuroChat, a friendly AI assistant specialized in personality psychology and MBTI types. The user wants to discuss their personality type and get insights. Respond in a warm, encouraging tone and provide helpful insights about personality development, relationships, and self-understanding. Keep responses conversational and under 200 words.
@@ -76,7 +87,8 @@ User message: ${answers}`;
 
     console.log('Sending request to Gemini API...');
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+    // Updated to use the correct Gemini model
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -89,7 +101,9 @@ User message: ${answers}`;
         }],
         generationConfig: {
           temperature: type === 'assessment' ? 0.1 : 0.7,
-          maxOutputTokens: type === 'assessment' ? 10 : 300
+          maxOutputTokens: type === 'assessment' ? 1000 : 300,
+          topP: 0.8,
+          topK: 10
         }
       }),
     });
