@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Download, Share2, Lightbulb, MessageCircle } from "lucide-react";
+import { ArrowLeft, Download, Share2, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { calculateMBTI, MBTIResult } from "@/utils/mbtiCalculator";
@@ -13,6 +13,7 @@ const MBTIResultPage = () => {
   const { toast } = useToast();
   const [result, setResult] = useState<MBTIResult | null>(null);
   const [isCalculating, setIsCalculating] = useState(true);
+  const [showChatPage, setShowChatPage] = useState(false);
 
   useEffect(() => {
     const savedAnswers = localStorage.getItem('mbtiAnswers');
@@ -105,6 +106,39 @@ const MBTIResultPage = () => {
     );
   }
 
+  if (showChatPage) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-neuro-background to-white px-6 py-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-6 text-center">
+            <div className="flex items-center justify-center mb-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowChatPage(false)}
+                className="mr-4"
+              >
+                <ArrowLeft className="h-6 w-6 text-neuro-primary" />
+              </Button>
+              <h1 className="text-3xl font-bold text-neuro-primary">
+                NeuroChat AI - Your Personal Companion
+              </h1>
+            </div>
+            <p className="text-lg text-gray-600">
+              Specialized for {result.type} - {result.nickname} personalities
+            </p>
+          </div>
+          <NeuroChat 
+            personalityType={result.type}
+            nickname={result.nickname}
+            mode="page"
+            onClose={() => setShowChatPage(false)}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-neuro-background to-white px-6 py-8">
       <div className="max-w-2xl mx-auto">
@@ -143,25 +177,14 @@ const MBTIResultPage = () => {
           </CardHeader>
         </Card>
 
-        {/* Chat with AI Call-to-Action */}
-        <Card className="mb-6 animate-fade-in bg-gradient-to-r from-neuro-primary/10 to-neuro-accent/10 border-2 border-neuro-primary/20" style={{ animationDelay: '0.1s' }}>
-          <CardHeader>
-            <CardTitle className="text-lg text-neuro-primary flex items-center justify-center">
-              <MessageCircle className="h-5 w-5 mr-2" />
-              Chat with NeuroChat AI about your {result.type} personality!
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-gray-600 mb-4">
-              Get personalized insights, ask questions about your strengths, and explore how to maximize your {result.type} potential.
-            </p>
-            <div className="bg-white/50 rounded-lg p-3 border border-neuro-primary/20">
-              <p className="text-sm text-neuro-primary font-medium">
-                💬 Look for the chat button in the bottom right corner!
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Prominent NeuroChat Call-to-Action */}
+        <div onClick={() => setShowChatPage(true)}>
+          <NeuroChat 
+            personalityType={result.type}
+            nickname={result.nickname}
+            mode="widget"
+          />
+        </div>
 
         {/* Strengths & Challenges */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -283,9 +306,6 @@ const MBTIResultPage = () => {
           </Button>
         </div>
       </div>
-
-      {/* NeuroChat AI Assistant */}
-      <NeuroChat personalityType={result.type} nickname={result.nickname} />
     </div>
   );
 };
