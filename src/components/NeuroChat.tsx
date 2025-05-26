@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageCircle, Send, X } from "lucide-react";
+import { MessageCircle, Send, X, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -15,16 +15,17 @@ interface Message {
 
 interface NeuroChatProps {
   personalityType?: string;
+  nickname?: string;
 }
 
-const NeuroChat = ({ personalityType }: NeuroChatProps) => {
+const NeuroChat = ({ personalityType, nickname }: NeuroChatProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       text: personalityType 
-        ? `Hi! I see you're ${personalityType}. I'm NeuroChat, your AI companion for exploring personality insights. What would you like to discuss about your personality type?`
-        : "Hi! I'm NeuroChat, your AI companion for exploring personality insights. How can I help you understand yourself better today?",
+        ? `Hi there, ${personalityType} - ${nickname}! 🎉 I'm NeuroChat, your personal AI companion. I'm here to help you explore your unique personality traits, understand your strengths, and navigate your personal growth journey. What aspect of being ${personalityType} would you like to dive into?`
+        : "Hi! I'm NeuroChat, your AI companion for exploring personality insights. I'm here to help you understand yourself better. What's on your mind today?",
       isUser: false,
       timestamp: new Date()
     }
@@ -44,12 +45,16 @@ const NeuroChat = ({ personalityType }: NeuroChatProps) => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const messageToSend = currentMessage;
     setCurrentMessage('');
     setIsLoading(true);
 
     try {
       const { data, error } = await supabase.functions.invoke('gemini-personality', {
-        body: { answers: currentMessage, type: 'chat' }
+        body: { 
+          answers: `User is ${personalityType ? `${personalityType} - ${nickname}` : 'exploring their personality'}. User message: ${messageToSend}`, 
+          type: 'chat' 
+        }
       });
 
       if (error) throw error;
@@ -86,20 +91,36 @@ const NeuroChat = ({ personalityType }: NeuroChatProps) => {
       <div className="fixed bottom-6 right-6 z-50">
         <Button
           onClick={() => setIsOpen(true)}
-          className="bg-gradient-to-r from-primary-light to-neuro-primary hover:from-neuro-primary hover:to-primary-light text-white rounded-full w-14 h-14 shadow-lg"
+          className="bg-gradient-to-r from-primary-light to-neuro-primary hover:from-neuro-primary hover:to-primary-light text-white rounded-full w-16 h-16 shadow-lg animate-pulse hover:animate-none transition-all duration-300 hover:scale-105"
         >
-          <MessageCircle className="h-6 w-6" />
+          <div className="flex flex-col items-center">
+            <Sparkles className="h-5 w-5 mb-1" />
+            <MessageCircle className="h-4 w-4" />
+          </div>
         </Button>
+        {personalityType && (
+          <div className="absolute -top-12 right-0 bg-white rounded-lg shadow-lg p-2 text-xs text-neuro-primary font-medium whitespace-nowrap">
+            Chat about your {personalityType} traits!
+          </div>
+        )}
       </div>
     );
   }
 
   return (
     <div className="fixed bottom-6 right-6 z-50 w-80 max-w-[calc(100vw-2rem)]">
-      <Card className="h-96 flex flex-col shadow-xl">
+      <Card className="h-96 flex flex-col shadow-xl border-2 border-neuro-primary/20">
         <CardHeader className="p-4 bg-gradient-to-r from-primary-light to-neuro-primary text-white rounded-t-lg">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-semibold">NeuroChat AI</CardTitle>
+            <div className="flex items-center space-x-2">
+              <Sparkles className="h-5 w-5" />
+              <div>
+                <CardTitle className="text-lg font-semibold">NeuroChat AI</CardTitle>
+                {personalityType && (
+                  <p className="text-xs opacity-90">Your {personalityType} companion</p>
+                )}
+              </div>
+            </div>
             <Button
               variant="ghost"
               size="icon"
@@ -122,7 +143,7 @@ const NeuroChat = ({ personalityType }: NeuroChatProps) => {
                   className={`max-w-[80%] p-3 rounded-lg text-sm ${
                     message.isUser
                       ? 'bg-neuro-primary text-white'
-                      : 'bg-gray-100 text-gray-800'
+                      : 'bg-gradient-to-r from-neuro-background to-gray-100 text-gray-800 border border-neuro-primary/10'
                   }`}
                 >
                   {message.text}
@@ -131,31 +152,31 @@ const NeuroChat = ({ personalityType }: NeuroChatProps) => {
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 p-3 rounded-lg text-sm text-gray-600">
+                <div className="bg-gradient-to-r from-neuro-background to-gray-100 p-3 rounded-lg text-sm text-gray-600 border border-neuro-primary/10">
                   <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-neuro-primary rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-neuro-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-neuro-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
                 </div>
               </div>
             )}
           </div>
           
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t border-gray-200 bg-gradient-to-r from-neuro-background/30 to-white">
             <div className="flex space-x-2">
               <textarea
                 value={currentMessage}
                 onChange={(e) => setCurrentMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask about your personality..."
-                className="flex-1 p-2 border border-gray-300 rounded-lg resize-none text-sm focus:outline-none focus:ring-2 focus:ring-neuro-primary"
+                placeholder={personalityType ? `Ask about your ${personalityType} traits...` : "Ask about your personality..."}
+                className="flex-1 p-2 border border-neuro-primary/30 rounded-lg resize-none text-sm focus:outline-none focus:ring-2 focus:ring-neuro-primary focus:border-transparent"
                 rows={2}
               />
               <Button
                 onClick={sendMessage}
                 disabled={!currentMessage.trim() || isLoading}
-                className="bg-neuro-primary hover:bg-neuro-primary/90 text-white p-2"
+                className="bg-neuro-primary hover:bg-neuro-primary/90 text-white p-2 transition-all duration-200 hover:scale-105"
               >
                 <Send className="h-4 w-4" />
               </Button>

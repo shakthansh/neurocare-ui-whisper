@@ -1,6 +1,7 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Download, Share2, Lightbulb } from "lucide-react";
+import { ArrowLeft, Download, Share2, Lightbulb, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { calculateMBTI, MBTIResult } from "@/utils/mbtiCalculator";
@@ -142,9 +143,29 @@ const MBTIResultPage = () => {
           </CardHeader>
         </Card>
 
+        {/* Chat with AI Call-to-Action */}
+        <Card className="mb-6 animate-fade-in bg-gradient-to-r from-neuro-primary/10 to-neuro-accent/10 border-2 border-neuro-primary/20" style={{ animationDelay: '0.1s' }}>
+          <CardHeader>
+            <CardTitle className="text-lg text-neuro-primary flex items-center justify-center">
+              <MessageCircle className="h-5 w-5 mr-2" />
+              Chat with NeuroChat AI about your {result.type} personality!
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-center">
+            <p className="text-gray-600 mb-4">
+              Get personalized insights, ask questions about your strengths, and explore how to maximize your {result.type} potential.
+            </p>
+            <div className="bg-white/50 rounded-lg p-3 border border-neuro-primary/20">
+              <p className="text-sm text-neuro-primary font-medium">
+                💬 Look for the chat button in the bottom right corner!
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Strengths & Challenges */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <Card className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <Card className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <CardHeader>
               <CardTitle className="text-lg text-neuro-primary">✨ Your Strengths</CardTitle>
             </CardHeader>
@@ -160,7 +181,7 @@ const MBTIResultPage = () => {
             </CardContent>
           </Card>
 
-          <Card className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <Card className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <CardHeader>
               <CardTitle className="text-lg text-neuro-primary">🎯 Growth Areas</CardTitle>
             </CardHeader>
@@ -178,7 +199,7 @@ const MBTIResultPage = () => {
         </div>
 
         {/* Tips Section */}
-        <Card className="mb-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+        <Card className="mb-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
           <CardHeader>
             <CardTitle className="text-lg text-neuro-primary flex items-center">
               <Lightbulb className="h-5 w-5 mr-2" />
@@ -198,7 +219,7 @@ const MBTIResultPage = () => {
         </Card>
 
         {/* Famous People */}
-        <Card className="mb-8 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+        <Card className="mb-8 animate-fade-in" style={{ animationDelay: '0.5s' }}>
           <CardHeader>
             <CardTitle className="text-lg text-neuro-primary">🌟 Famous {result.type}s</CardTitle>
           </CardHeader>
@@ -217,7 +238,7 @@ const MBTIResultPage = () => {
         </Card>
 
         {/* Share Section */}
-        <Card className="mb-8 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+        <Card className="mb-8 animate-fade-in" style={{ animationDelay: '0.6s' }}>
           <CardHeader>
             <CardTitle className="text-lg text-neuro-primary">📱 Share Your Result</CardTitle>
           </CardHeader>
@@ -246,7 +267,7 @@ const MBTIResultPage = () => {
         </Card>
 
         {/* Call to Actions */}
-        <div className="flex flex-col gap-4 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+        <div className="flex flex-col gap-4 animate-fade-in" style={{ animationDelay: '0.7s' }}>
           <Button
             onClick={handleRetakeTest}
             variant="outline"
@@ -264,7 +285,7 @@ const MBTIResultPage = () => {
       </div>
 
       {/* NeuroChat AI Assistant */}
-      <NeuroChat personalityType={result.type} />
+      <NeuroChat personalityType={result.type} nickname={result.nickname} />
     </div>
   );
 };

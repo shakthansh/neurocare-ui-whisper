@@ -79,15 +79,23 @@ Make sure to:
 - Provide accurate personality insights based on the actual responses
 - Return ONLY valid JSON, no additional text`;
     } else {
-      // Chat mode
-      prompt = `You are NeuroChat, a friendly AI assistant specialized in personality psychology and MBTI types. The user wants to discuss their personality type and get insights. Respond in a warm, encouraging tone and provide helpful insights about personality development, relationships, and self-understanding. Keep responses conversational and under 200 words.
+      // Chat mode - enhanced for personality-focused conversations
+      prompt = `You are NeuroChat, a friendly and insightful AI personality coach specialized in MBTI psychology. Your role is to provide warm, encouraging, and personalized guidance about personality development, relationships, career insights, and self-understanding.
 
-User message: ${answers}`;
+${answers}
+
+Respond in a conversational, supportive tone. Focus on:
+- Providing actionable insights about their personality type
+- Helping them understand their strengths and growth areas
+- Offering practical tips for personal development
+- Discussing how their type impacts relationships and career
+- Being encouraging and positive while being authentic
+
+Keep responses under 150 words and make them feel heard and understood. Use emojis sparingly but effectively. If they mention their personality type, reference it specifically in your advice.`;
     }
 
     console.log('Sending request to Gemini API...');
 
-    // Updated to use the correct Gemini model
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {
@@ -119,7 +127,6 @@ User message: ${answers}`;
     const data = await response.json();
     console.log('Gemini API response data:', JSON.stringify(data, null, 2));
 
-    // Check if response has the expected structure
     if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts || !data.candidates[0].content.parts[0]) {
       console.error('Unexpected Gemini API response structure:', data);
       throw new Error('Invalid response structure from Gemini API');
