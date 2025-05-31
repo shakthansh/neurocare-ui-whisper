@@ -11,7 +11,7 @@ import { mbtiQuestions } from "@/data/mbtiQuestions";
 import { useToast } from "@/hooks/use-toast";
 
 // Import the Hindi translation JSON here (adjust path accordingly)
-import translations from "@/locales/hi.json";
+import translations from "@/locales/hi/translation.json";
 
 const MBTITest = () => {
   const navigate = useNavigate();
