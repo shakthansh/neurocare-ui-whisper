@@ -1,0 +1,32 @@
+{
+  "hero": {
+    "title": "NeuroCare",
+    "subtitle": "Conócete. Conéctate profundamente.",
+    "description": "Insights de personalidad impulsados por IA",
+    "cta": "Comenzar Mi Test de Personalidad",
+    "mindUnique": "Tu mente es única. Explorémosla."
+  },
+  "testSection": {
+    "title": "Elige Tu Camino",
+    "description": "Cada prueba revela diferentes aspectos de tu personalidad. Comienza con MBTI y descubre insights más profundos sobre ti mismo.",
+    "comingSoon": "Más evaluaciones de personalidad próximamente...",
+    "tests": {
+      "mbti": {
+        "title": "MBTI",
+        "description": "Descubre tu personalidad a través de la precisión de la IA. Comprende tus preferencias cognitivas y cómo interactúas con el mundo."
+      },
+      "bigFive": {
+        "title": "Cinco Grandes",
+        "description": "Explora las cinco dimensiones fundamentales de la personalidad que te definen."
+      },
+      "enneagram": {
+        "title": "Eneagrama",
+        "description": "Descubre tus motivaciones y miedos fundamentales a través de este sistema de sabiduría ancestral."
+      },
+      "eq": {
+        "title": "Inteligencia Emocional",
+        "description": "Mide tu capacidad para entender y gestionar las emociones de manera efectiva."
+      }
+    }
+  }
+}

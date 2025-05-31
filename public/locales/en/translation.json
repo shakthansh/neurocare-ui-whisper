@@ -1,0 +1,32 @@
+{
+  "hero": {
+    "title": "NeuroCare",
+    "subtitle": "Understand yourself. Connect deeply.",
+    "description": "AI-powered personality insights",
+    "cta": "Start My Personality Test",
+    "mindUnique": "Your mind is unique. Let's explore it."
+  },
+  "testSection": {
+    "title": "Choose Your Journey",
+    "description": "Each test reveals different aspects of your personality. Start with MBTI and unlock deeper insights about yourself.",
+    "comingSoon": "More personality assessments coming soon...",
+    "tests": {
+      "mbti": {
+        "title": "MBTI",
+        "description": "Discover your personality through AI precision. Understand your cognitive preferences and how you interact with the world."
+      },
+      "bigFive": {
+        "title": "Big Five",
+        "description": "Explore the five fundamental dimensions of personality that shape who you are."
+      },
+      "enneagram": {
+        "title": "Enneagram",
+        "description": "Uncover your core motivations and fears through this ancient wisdom system."
+      },
+      "eq": {
+        "title": "Emotional Intelligence",
+        "description": "Measure your ability to understand and manage emotions effectively."
+      }
+    }
+  }
+}
