@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,60 +14,10 @@ const MBTITest = () => {
   const { toast } = useToast();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
-  const [translations, setTranslations] = useState<any>(null);
-  const [currentLanguage, setCurrentLanguage] = useState('en'); // default to English
 
   const totalQuestions = mbtiQuestions.length;
   const progress = ((currentQuestion + 1) / totalQuestions) * 100;
   const question = mbtiQuestions[currentQuestion];
-
-  // Load translations based on selected language
-  useEffect(() => {
-    const loadTranslations = async () => {
-      // Get language from localStorage, URL params, or default to English
-      const savedLanguage = localStorage.getItem('selectedLanguage') || 
-                           new URLSearchParams(window.location.search).get('lang') || 
-                           'en';
-      
-      setCurrentLanguage(savedLanguage);
-
-      try {
-        let translationData;
-        
-        if (savedLanguage === 'hi') {
-          // Import Hindi translations
-          translationData = await import('@/locales/hi/translation.json');
-        } else {
-          // Default to English (you can create an English translation file or use fallback text)
-          translationData = null; // Will use fallback text
-        }
-        
-        setTranslations(translationData?.default || null);
-      } catch (error) {
-        console.error('Failed to load translations:', error);
-        setTranslations(null); // Fallback to English
-      }
-    };
-
-    loadTranslations();
-  }, []);
-
-  // Helper to get translated text by key, fallback to fallbackText
-  const getTranslatedText = (key: string, fallback: string) => {
-    if (!translations) return fallback;
-    
-    // nested key access, e.g., "questions.1"
-    const keys = key.split(".");
-    let result: any = translations;
-    for (const k of keys) {
-      if (result && k in result) {
-        result = result[k];
-      } else {
-        return fallback;
-      }
-    }
-    return typeof result === "string" ? result : fallback;
-  };
 
   const handleAnswer = (value: string) => {
     setAnswers(prev => ({
@@ -90,60 +39,29 @@ const MBTITest = () => {
   };
 
   const handleSubmit = () => {
+    // Check if all questions are answered
     const unansweredQuestions = mbtiQuestions.filter(q => !(q.id in answers));
     if (unansweredQuestions.length > 0) {
-      const toastTitle = currentLanguage === 'hi' ? 
-        "कृपया सभी प्रश्नों का उत्तर दें" : 
-        "Please answer all questions";
-      const toastDescription = currentLanguage === 'hi' ? 
-        `आपके पास ${unansweredQuestions.length} अनुत्तरित प्रश्न हैं।` :
-        `You have ${unansweredQuestions.length} unanswered questions.`;
-        
       toast({
-        title: toastTitle,
-        description: toastDescription,
+        title: "Please answer all questions",
+        description: You have ${unansweredQuestions.length} unanswered questions.,
         variant: "destructive",
       });
       return;
     }
 
+    // Save answers to localStorage and navigate to results
     localStorage.setItem('mbtiAnswers', JSON.stringify(answers));
     navigate('/mbti-result');
   };
 
-  // Translate scale labels
-  const getScaleLabels = () => {
-    if (currentLanguage === 'hi') {
-      return [
-        "बिल्कुल असहमत",
-        "असहमत", 
-        "तटस्थ",
-        "सहमत",
-        "बिल्कुल सहमत"
-      ];
-    }
-    return [
-      "Strongly Disagree",
-      "Disagree",
-      "Neutral", 
-      "Agree",
-      "Strongly Agree"
-    ];
-  };
-
-  const scaleLabels = getScaleLabels();
-
-  // Show loading state while translations are loading
-  if (translations === null && currentLanguage === 'hi') {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-neuro-background to-white px-6 py-8 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neuro-primary mx-auto mb-4"></div>
-          <p>Loading translations...</p>
-        </div>
-      </div>
-    );
-  }
+  const scaleLabels = [
+    "Strongly Disagree",
+    "Disagree", 
+    "Neutral",
+    "Agree",
+    "Strongly Agree"
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neuro-background to-white px-6 py-8">
@@ -159,15 +77,8 @@ const MBTITest = () => {
             <ArrowLeft className="h-6 w-6 text-neuro-primary" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-neuro-primary">
-              {currentLanguage === 'hi' ? 'एमबीटीआई परीक्षण' : 'MBTI Test'}
-            </h1>
-            <p className="text-sm text-gray-600">
-              {currentLanguage === 'hi' ? 
-                `प्रश्न ${currentQuestion + 1} का ${totalQuestions}` :
-                `Question ${currentQuestion + 1} of ${totalQuestions}`
-              }
-            </p>
+            <h1 className="text-2xl font-bold text-neuro-primary">MBTI Test</h1>
+            <p className="text-sm text-gray-600">Question {currentQuestion + 1} of {totalQuestions}</p>
           </div>
         </div>
 
@@ -180,7 +91,7 @@ const MBTITest = () => {
         <Card className="mb-8 animate-fade-in">
           <CardContent className="p-8">
             <h2 className="text-lg font-medium text-gray-800 mb-6 leading-relaxed">
-              {getTranslatedText(question.textKey, question.fallbackText)}
+              {question.text}
             </h2>
 
             <RadioGroup
@@ -189,9 +100,13 @@ const MBTITest = () => {
               className="space-y-4"
             >
               {scaleLabels.map((label, index) => (
-                <div key={index + 1} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
-                  <RadioGroupItem value={(index + 1).toString()} id={`q${question.id}_opt${index + 1}`} />
-                  <Label htmlFor={`q${question.id}_opt${index + 1}`}>
+                <div key={index + 1} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <RadioGroupItem value={(index + 1).toString()} id={option-${index + 1}} />
+                  <Label 
+                    htmlFor={option-${index + 1}} 
+                    className="flex-1 cursor-pointer text-sm font-medium"
+                  >
+                    <span className="text-neuro-primary font-semibold mr-2">{index + 1}.</span>
                     {label}
                   </Label>
                 </div>
@@ -201,31 +116,33 @@ const MBTITest = () => {
         </Card>
 
         {/* Navigation Buttons */}
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <Button
             variant="outline"
             onClick={goToPrevious}
             disabled={currentQuestion === 0}
             className="flex items-center space-x-2"
           >
-            <ArrowLeft /> 
-            <span>{currentLanguage === 'hi' ? 'पिछला' : 'Previous'}</span>
+            <ArrowLeft className="h-4 w-4" />
+            <span>Previous</span>
           </Button>
-          {currentQuestion < totalQuestions - 1 ? (
+
+          {currentQuestion === totalQuestions - 1 ? (
             <Button
-              onClick={goToNext}
-              disabled={!(question.id in answers)}
-              className="flex items-center space-x-2"
+              onClick={handleSubmit}
+              disabled={!answers[question.id]}
+              className="bg-gradient-to-r from-primary-light to-neuro-primary hover:from-neuro-primary hover:to-primary-light text-white px-8"
             >
-              <span>{currentLanguage === 'hi' ? 'अगला' : 'Next'}</span> 
-              <ArrowRight />
+              Submit Test
             </Button>
           ) : (
             <Button
-              onClick={handleSubmit}
-              disabled={!(question.id in answers)}
+              onClick={goToNext}
+              disabled={!answers[question.id]}
+              className="flex items-center space-x-2 bg-gradient-to-r from-primary-light to-neuro-primary hover:from-neuro-primary hover:to-primary-light text-white"
             >
-              {currentLanguage === 'hi' ? 'जमा करें' : 'Submit'}
+              <span>Next</span>
+              <ArrowRight className="h-4 w-4" />
             </Button>
           )}
         </div>
