@@ -10,6 +10,9 @@ import { Label } from "@/components/ui/label";
 import { mbtiQuestions } from "@/data/mbtiQuestions";
 import { useToast } from "@/hooks/use-toast";
 
+// Import the Hindi translation JSON here (adjust path accordingly)
+import translations from "@/locales/hi.json";
+
 const MBTITest = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -19,6 +22,21 @@ const MBTITest = () => {
   const totalQuestions = mbtiQuestions.length;
   const progress = ((currentQuestion + 1) / totalQuestions) * 100;
   const question = mbtiQuestions[currentQuestion];
+
+  // Helper to get translated text by key, fallback to fallbackText
+  const getTranslatedText = (key: string, fallback: string) => {
+    // nested key access, e.g., "questions.1"
+    const keys = key.split(".");
+    let result: any = translations;
+    for (const k of keys) {
+      if (result && k in result) {
+        result = result[k];
+      } else {
+        return fallback;
+      }
+    }
+    return typeof result === "string" ? result : fallback;
+  };
 
   const handleAnswer = (value: string) => {
     setAnswers(prev => ({
@@ -40,7 +58,6 @@ const MBTITest = () => {
   };
 
   const handleSubmit = () => {
-    // Check if all questions are answered
     const unansweredQuestions = mbtiQuestions.filter(q => !(q.id in answers));
     if (unansweredQuestions.length > 0) {
       toast({
@@ -51,14 +68,13 @@ const MBTITest = () => {
       return;
     }
 
-    // Save answers to localStorage and navigate to results
     localStorage.setItem('mbtiAnswers', JSON.stringify(answers));
     navigate('/mbti-result');
   };
 
   const scaleLabels = [
     "Strongly Disagree",
-    "Disagree", 
+    "Disagree",
     "Neutral",
     "Agree",
     "Strongly Agree"
@@ -92,7 +108,7 @@ const MBTITest = () => {
         <Card className="mb-8 animate-fade-in">
           <CardContent className="p-8">
             <h2 className="text-lg font-medium text-gray-800 mb-6 leading-relaxed">
-              {question.text}
+              {getTranslatedText(question.textKey, question.fallbackText)}
             </h2>
 
             <RadioGroup
@@ -101,13 +117,9 @@ const MBTITest = () => {
               className="space-y-4"
             >
               {scaleLabels.map((label, index) => (
-                <div key={index + 1} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <RadioGroupItem value={(index + 1).toString()} id={`option-${index + 1}`} />
-                  <Label 
-                    htmlFor={`option-${index + 1}`} 
-                    className="flex-1 cursor-pointer text-sm font-medium"
-                  >
-                    <span className="text-neuro-primary font-semibold mr-2">{index + 1}.</span>
+                <div key={index + 1} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
+                  <RadioGroupItem value={(index + 1).toString()} id={`q${question.id}_opt${index + 1}`} />
+                  <Label htmlFor={`q${question.id}_opt${index + 1}`}>
                     {label}
                   </Label>
                 </div>
@@ -117,33 +129,29 @@ const MBTITest = () => {
         </Card>
 
         {/* Navigation Buttons */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between">
           <Button
             variant="outline"
             onClick={goToPrevious}
             disabled={currentQuestion === 0}
             className="flex items-center space-x-2"
           >
-            <ArrowLeft className="h-4 w-4" />
-            <span>Previous</span>
+            <ArrowLeft /> <span>Previous</span>
           </Button>
-
-          {currentQuestion === totalQuestions - 1 ? (
+          {currentQuestion < totalQuestions - 1 ? (
             <Button
-              onClick={handleSubmit}
-              disabled={!answers[question.id]}
-              className="bg-gradient-to-r from-primary-light to-neuro-primary hover:from-neuro-primary hover:to-primary-light text-white px-8"
+              onClick={goToNext}
+              disabled={!(question.id in answers)}
+              className="flex items-center space-x-2"
             >
-              Submit Test
+              <span>Next</span> <ArrowRight />
             </Button>
           ) : (
             <Button
-              onClick={goToNext}
-              disabled={!answers[question.id]}
-              className="flex items-center space-x-2 bg-gradient-to-r from-primary-light to-neuro-primary hover:from-neuro-primary hover:to-primary-light text-white"
+              onClick={handleSubmit}
+              disabled={!(question.id in answers)}
             >
-              <span>Next</span>
-              <ArrowRight className="h-4 w-4" />
+              Submit
             </Button>
           )}
         </div>
@@ -153,3 +161,4 @@ const MBTITest = () => {
 };
 
 export default MBTITest;
+
