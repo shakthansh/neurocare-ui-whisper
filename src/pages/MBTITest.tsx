@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,21 +10,53 @@ import { Label } from "@/components/ui/label";
 import { mbtiQuestions } from "@/data/mbtiQuestions";
 import { useToast } from "@/hooks/use-toast";
 
-// Import the Hindi translation JSON here (adjust path accordingly)
-import translations from "@/locales/hi/translation.json";
-
 const MBTITest = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [translations, setTranslations] = useState<any>(null);
+  const [currentLanguage, setCurrentLanguage] = useState('en'); // default to English
 
   const totalQuestions = mbtiQuestions.length;
   const progress = ((currentQuestion + 1) / totalQuestions) * 100;
   const question = mbtiQuestions[currentQuestion];
 
+  // Load translations based on selected language
+  useEffect(() => {
+    const loadTranslations = async () => {
+      // Get language from localStorage, URL params, or default to English
+      const savedLanguage = localStorage.getItem('selectedLanguage') || 
+                           new URLSearchParams(window.location.search).get('lang') || 
+                           'en';
+      
+      setCurrentLanguage(savedLanguage);
+
+      try {
+        let translationData;
+        
+        if (savedLanguage === 'hi') {
+          // Import Hindi translations
+          translationData = await import('@/locales/hi/translation.json');
+        } else {
+          // Default to English (you can create an English translation file or use fallback text)
+          translationData = null; // Will use fallback text
+        }
+        
+        setTranslations(translationData?.default || null);
+      } catch (error) {
+        console.error('Failed to load translations:', error);
+        setTranslations(null); // Fallback to English
+      }
+    };
+
+    loadTranslations();
+  }, []);
+
   // Helper to get translated text by key, fallback to fallbackText
   const getTranslatedText = (key: string, fallback: string) => {
+    if (!translations) return fallback;
+    
     // nested key access, e.g., "questions.1"
     const keys = key.split(".");
     let result: any = translations;
@@ -60,9 +92,16 @@ const MBTITest = () => {
   const handleSubmit = () => {
     const unansweredQuestions = mbtiQuestions.filter(q => !(q.id in answers));
     if (unansweredQuestions.length > 0) {
+      const toastTitle = currentLanguage === 'hi' ? 
+        "कृपया सभी प्रश्नों का उत्तर दें" : 
+        "Please answer all questions";
+      const toastDescription = currentLanguage === 'hi' ? 
+        `आपके पास ${unansweredQuestions.length} अनुत्तरित प्रश्न हैं।` :
+        `You have ${unansweredQuestions.length} unanswered questions.`;
+        
       toast({
-        title: "Please answer all questions",
-        description: `You have ${unansweredQuestions.length} unanswered questions.`,
+        title: toastTitle,
+        description: toastDescription,
         variant: "destructive",
       });
       return;
@@ -72,13 +111,39 @@ const MBTITest = () => {
     navigate('/mbti-result');
   };
 
-  const scaleLabels = [
-    "Strongly Disagree",
-    "Disagree",
-    "Neutral",
-    "Agree",
-    "Strongly Agree"
-  ];
+  // Translate scale labels
+  const getScaleLabels = () => {
+    if (currentLanguage === 'hi') {
+      return [
+        "बिल्कुल असहमत",
+        "असहमत", 
+        "तटस्थ",
+        "सहमत",
+        "बिल्कुल सहमत"
+      ];
+    }
+    return [
+      "Strongly Disagree",
+      "Disagree",
+      "Neutral", 
+      "Agree",
+      "Strongly Agree"
+    ];
+  };
+
+  const scaleLabels = getScaleLabels();
+
+  // Show loading state while translations are loading
+  if (translations === null && currentLanguage === 'hi') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-neuro-background to-white px-6 py-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neuro-primary mx-auto mb-4"></div>
+          <p>Loading translations...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neuro-background to-white px-6 py-8">
@@ -94,8 +159,15 @@ const MBTITest = () => {
             <ArrowLeft className="h-6 w-6 text-neuro-primary" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-neuro-primary">MBTI Test</h1>
-            <p className="text-sm text-gray-600">Question {currentQuestion + 1} of {totalQuestions}</p>
+            <h1 className="text-2xl font-bold text-neuro-primary">
+              {currentLanguage === 'hi' ? 'एमबीटीआई परीक्षण' : 'MBTI Test'}
+            </h1>
+            <p className="text-sm text-gray-600">
+              {currentLanguage === 'hi' ? 
+                `प्रश्न ${currentQuestion + 1} का ${totalQuestions}` :
+                `Question ${currentQuestion + 1} of ${totalQuestions}`
+              }
+            </p>
           </div>
         </div>
 
@@ -136,7 +208,8 @@ const MBTITest = () => {
             disabled={currentQuestion === 0}
             className="flex items-center space-x-2"
           >
-            <ArrowLeft /> <span>Previous</span>
+            <ArrowLeft /> 
+            <span>{currentLanguage === 'hi' ? 'पिछला' : 'Previous'}</span>
           </Button>
           {currentQuestion < totalQuestions - 1 ? (
             <Button
@@ -144,14 +217,15 @@ const MBTITest = () => {
               disabled={!(question.id in answers)}
               className="flex items-center space-x-2"
             >
-              <span>Next</span> <ArrowRight />
+              <span>{currentLanguage === 'hi' ? 'अगला' : 'Next'}</span> 
+              <ArrowRight />
             </Button>
           ) : (
             <Button
               onClick={handleSubmit}
               disabled={!(question.id in answers)}
             >
-              Submit
+              {currentLanguage === 'hi' ? 'जमा करें' : 'Submit'}
             </Button>
           )}
         </div>
@@ -161,4 +235,3 @@ const MBTITest = () => {
 };
 
 export default MBTITest;
-
