@@ -1,4 +1,13 @@
- { id: 1, text: "I prefer quiet time alone to recharge rather than social gatherings.", dimension: 'EI' },
+export interface MBTIQuestion {
+  id: number;
+  text: string;
+  dimension: 'EI' | 'SN' | 'TF' | 'JP';
+  reverse?: boolean;
+}
+
+export const mbtiQuestions: MBTIQuestion[] = [
+  // Questions 1,3,5,21,28,29 relate to I/E (lower scores mean Extroversion)
+  { id: 1, text: "I prefer quiet time alone to recharge rather than social gatherings.", dimension: 'EI' },
   { id: 2, text: "I find it easy to start conversations with strangers.", dimension: 'EI', reverse: true },
   { id: 3, text: "I often think before I speak.", dimension: 'EI' },
   { id: 4, text: "I enjoy being the center of attention.", dimension: 'EI', reverse: true },
