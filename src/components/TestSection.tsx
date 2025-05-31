@@ -1,41 +1,59 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import TestCard from "./TestCard";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { PersonalityTestStartDialog } from "./PersonalityTestStartDialog";
 
 const TestSection = () => {
+  const { t, i18n } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [showStartDialog, setShowStartDialog] = useState(false);
 
   const handleMBTIStart = () => {
+    setShowStartDialog(true);
+  };
+
+  const handleTestStart = (name: string, language: string) => {
+    // Save user preferences
+    localStorage.setItem('userPreferences', JSON.stringify({ name, language }));
+    
+    // Change language if different from current
+    if (language !== i18n.language) {
+      i18n.changeLanguage(language);
+    }
+
     toast({
-      title: "MBTI Test Starting",
-      description: "Your personality journey begins now...",
+      title: t("testStart.toast.title"),
+      description: t("testStart.toast.description", { name }),
       duration: 3000,
     });
+
+    setShowStartDialog(false);
     navigate("/mbti-test");
-    console.log("Starting MBTI test...");
   };
 
   const tests = [
     {
-      title: "MBTI",
-      description: "Discover your personality through AI precision. Understand your cognitive preferences and how you interact with the world.",
+      title: t("testSection.tests.mbti.title"),
+      description: t("testSection.tests.mbti.description"),
       isAvailable: true,
       onStart: handleMBTIStart
     },
     {
-      title: "Big Five",
-      description: "Explore the five fundamental dimensions of personality that shape who you are.",
+      title: t("testSection.tests.bigFive.title"),
+      description: t("testSection.tests.bigFive.description"),
       isAvailable: false
     },
     {
-      title: "Enneagram",
-      description: "Uncover your core motivations and fears through this ancient wisdom system.",
+      title: t("testSection.tests.enneagram.title"),
+      description: t("testSection.tests.enneagram.description"),
       isAvailable: false
     },
     {
-      title: "Emotional Intelligence",
-      description: "Measure your ability to understand and manage emotions effectively.",
+      title: t("testSection.tests.eq.title"),
+      description: t("testSection.tests.eq.description"),
       isAvailable: false
     }
   ];
@@ -45,10 +63,10 @@ const TestSection = () => {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12 animate-fade-in">
           <h2 className="text-3xl md:text-4xl font-bold text-neuro-primary mb-4">
-            Choose Your Journey
+            {t("testSection.title")}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Each test reveals different aspects of your personality. Start with MBTI and unlock deeper insights about yourself.
+            {t("testSection.description")}
           </p>
         </div>
 
@@ -62,10 +80,16 @@ const TestSection = () => {
 
         <div className="text-center mt-12 animate-fade-in" style={{ animationDelay: '0.6s' }}>
           <p className="text-sm text-gray-500 italic">
-            More personality assessments coming soon...
+            {t("testSection.comingSoon")}
           </p>
         </div>
       </div>
+
+      <PersonalityTestStartDialog
+        open={showStartDialog}
+        onClose={() => setShowStartDialog(false)}
+        onStart={handleTestStart}
+      />
     </section>
   );
 };

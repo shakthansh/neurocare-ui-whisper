@@ -28,5 +28,14 @@
         "description": "Measure your ability to understand and manage emotions effectively."
       }
     }
+  },
+  "testStart": {
+    "title": "Before We Begin",
+    "description": "Let's personalize your experience",
+    "nameLabel": "Your Name",
+    "namePlaceholder": "Enter your name",
+    "languageLabel": "Preferred Language",
+    "languagePlaceholder": "Select a language",
+    "startButton": "Start Test"
   }
 }
