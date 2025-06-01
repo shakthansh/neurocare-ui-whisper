@@ -8,10 +8,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { mbtiQuestions } from "@/data/mbtiQuestions";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 
 const MBTITest = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
 
@@ -91,7 +93,7 @@ const MBTITest = () => {
         <Card className="mb-8 animate-fade-in">
           <CardContent className="p-8">
             <h2 className="text-lg font-medium text-gray-800 mb-6 leading-relaxed">
-              {question.text}
+              {t(`questions.${question.id}`)}
             </h2>
 
             <RadioGroup
