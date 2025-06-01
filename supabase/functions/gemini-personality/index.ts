@@ -116,7 +116,7 @@ ${isCouple ? `- Romantic compatibility and relationship dynamics
 - Potential conflicts and how to resolve them
 - Optimal team roles for each member`}
 
-Calculate a realistic compatibility score (60-95%) based on MBTI compatibility research. Return ONLY valid JSON.`;
+Calculate a realistic compatibility score (60-95%) based on MBTI compatibility research. Return ONLY valid JSON, no additional text or markdown formatting.`;
     } else {
       // Chat mode - enhanced for personality-focused conversations
       prompt = `You are NeuroChat, a friendly and insightful AI personality coach specialized in MBTI psychology. Your role is to provide warm, encouraging, and personalized guidance about personality development, relationships, career insights, and self-understanding.
@@ -171,9 +171,34 @@ Keep responses under 150 words and make them feel heard and understood. Use emoj
       throw new Error('Invalid response structure from Gemini API');
     }
 
-    const result = data.candidates[0].content.parts[0].text.trim();
-    console.log('Extracted result:', result);
+    let result = data.candidates[0].content.parts[0].text.trim();
+    console.log('Raw result from Gemini:', result);
 
+    // Handle JSON parsing for assessment and compatibility types
+    if (type === 'assessment' || type === 'compatibility') {
+      // Remove markdown code blocks if present
+      if (result.includes('```json')) {
+        result = result.replace(/```json\s*/g, '').replace(/```\s*$/g, '').trim();
+      } else if (result.includes('```')) {
+        result = result.replace(/```\s*/g, '').replace(/```\s*$/g, '').trim();
+      }
+      
+      try {
+        // Try to parse as JSON
+        const parsedResult = JSON.parse(result);
+        console.log('Successfully parsed JSON result:', parsedResult);
+        
+        return new Response(JSON.stringify({ result: parsedResult }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      } catch (parseError) {
+        console.error('JSON parsing error:', parseError);
+        console.error('Attempted to parse:', result);
+        throw new Error('Failed to parse Gemini response as JSON');
+      }
+    }
+
+    // For chat mode, return the raw result
     return new Response(JSON.stringify({ result }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
