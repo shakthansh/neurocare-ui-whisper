@@ -63,19 +63,60 @@ const handleShare = async () => {
   }
 };
   
-  const handleDownload = () => {
+ const handleDownload = () => {
   toast({
-    title: "Let's Connect!",
+    title: "🚀 Let’s Connect — Build Together!",
     description: (
-      <div>
-        <p>Shakthansh Pandey</p>
-        <p>Email: <a href="mailto:shaktanshpandey84@gmail.com" style={{ color: 'lightblue', textDecoration: 'underline' }}>shaktanshpandey84@gmail.com</a></p>
-        <p>LinkedIn: <a href="https://www.linkedin.com/in/shaktansh-pandey-7716212b5" target="_blank" rel="noopener noreferrer" style={{ color: 'lightblue', textDecoration: 'underline' }}>linkedin.com/in/shaktansh-pandey</a></p>
-        <p>Website: <a href="https://www.richestman.xyz" target="_blank" rel="noopener noreferrer" style={{ color: 'lightblue', textDecoration: 'underline' }}>richestman.xyz</a></p>
-        <p>Instagram: <a href="https://www.instagram.com/shakthansh" target="_blank" rel="noopener noreferrer" style={{ color: 'lightblue', textDecoration: 'underline' }}>instagram.com/shakthansh</a></p>
+      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+        <p>👋 Shakthansh Pandey</p>
+        <p>
+          📧 Email:{" "}
+          <a
+            href="mailto:shaktanshpandey84@gmail.com"
+            style={{ color: '#1a0dab', textDecoration: 'underline' }}
+          >
+            shaktanshpandey84@gmail.com
+          </a>
+        </p>
+        <p>
+          💼 LinkedIn:{" "}
+          <a
+            href="https://www.linkedin.com/in/shaktansh-pandey-7716212b5"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#1a0dab', textDecoration: 'underline' }}
+          >
+            linkedin.com/in/shaktansh-pandey
+          </a>
+        </p>
+        <p>
+          🌐 Website:{" "}
+          <a
+            href="https://www.richestman.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#1a0dab', textDecoration: 'underline' }}
+          >
+            richestman.xyz
+          </a>
+        </p>
+        <p>
+          📸 Instagram:{" "}
+          <a
+            href="https://www.instagram.com/shakthansh"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#1a0dab', textDecoration: 'underline' }}
+          >
+            instagram.com/shakthansh
+          </a>
+        </p>
+        <p style={{ fontStyle: "italic", marginTop: "8px" }}>
+          “Building self-awareness, one log at a time.”
+        </p>
       </div>
     ),
-    duration: 9000, // Keep it visible longer so people can read & click
+    duration: 10000,
     isClosable: true,
   });
 };
