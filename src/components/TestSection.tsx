@@ -1,18 +1,25 @@
+
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import TestCard from "./TestCard";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { PersonalityTestStartDialog } from "./PersonalityTestStartDialog";
+import { CompatibilityTestStartDialog } from "./CompatibilityTestStartDialog";
 
 const TestSection = () => {
   const { t, i18n } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [showStartDialog, setShowStartDialog] = useState(false);
+  const [showCompatibilityDialog, setShowCompatibilityDialog] = useState(false);
 
   const handleMBTIStart = () => {
     setShowStartDialog(true);
+  };
+
+  const handleCompatibilityStart = () => {
+    setShowCompatibilityDialog(true);
   };
 
   const handleTestStart = (name: string, language: string) => {
@@ -34,12 +41,25 @@ const TestSection = () => {
     navigate("/mbti-test");
   };
 
+  const handleCompatibilityTestStart = (data: any) => {
+    // Save compatibility data and navigate to compatibility test
+    localStorage.setItem('compatibilityData', JSON.stringify(data));
+    setShowCompatibilityDialog(false);
+    navigate("/compatibility-test");
+  };
+
   const tests = [
     {
       title: t("testSection.tests.mbti.title"),
       description: t("testSection.tests.mbti.description"),
       isAvailable: true,
       onStart: handleMBTIStart
+    },
+    {
+      title: "Personality Compatibility",
+      description: "Discover how personalities work together in relationships and teams",
+      isAvailable: true,
+      onStart: handleCompatibilityStart
     },
     {
       title: t("testSection.tests.bigFive.title"),
@@ -89,6 +109,12 @@ const TestSection = () => {
         open={showStartDialog}
         onClose={() => setShowStartDialog(false)}
         onStart={handleTestStart}
+      />
+
+      <CompatibilityTestStartDialog
+        open={showCompatibilityDialog}
+        onClose={() => setShowCompatibilityDialog(false)}
+        onStart={handleCompatibilityTestStart}
       />
     </section>
   );

@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import MBTITest from "./pages/MBTITest";
 import MBTIResult from "./pages/MBTIResult";
+import CompatibilityTest from "./pages/CompatibilityTest";
+import CompatibilityResult from "./pages/CompatibilityResult";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +23,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/mbti-test" element={<MBTITest />} />
           <Route path="/mbti-result" element={<MBTIResult />} />
+          <Route path="/compatibility-test" element={<CompatibilityTest />} />
+          <Route path="/compatibility-result" element={<CompatibilityResult />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

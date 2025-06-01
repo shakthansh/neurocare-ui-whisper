@@ -13,12 +13,12 @@ serve(async (req) => {
   }
 
   try {
-    const { answers, type } = await req.json();
+    const { answers, type, compatibilityData } = await req.json();
     const apiKey = 'AIzaSyCYEPPtZ59X7W0CbVzYNChgObjNwRQknFU';
 
-    console.log('Received request:', { type, answers: typeof answers });
+    console.log('Received request:', { type, answers: typeof answers, compatibilityData });
 
-    // Create prompt for Gemini based on user answers
+    // Create prompt for Gemini based on request type
     let prompt = '';
     
     if (type === 'assessment') {
@@ -78,6 +78,45 @@ Make sure to:
 - Questions 16,18,20,23,25 lean toward Judging, 17,19,24,30 toward Perceiving
 - Provide accurate personality insights based on the actual responses
 - Return ONLY valid JSON, no additional text`;
+    } else if (type === 'compatibility') {
+      const isCouple = compatibilityData.type === 'couple';
+      const participants = compatibilityData.participants;
+      
+      prompt = `Analyze the personality compatibility between these ${isCouple ? 'romantic partners' : 'team members'}:
+
+${participants.map((p: any, i: number) => `${isCouple ? (i === 0 ? 'Partner 1' : 'Partner 2') : `Team Member ${i + 1}`}: ${p.name} (${p.personalityType})`).join('\n')}
+
+Provide a comprehensive compatibility analysis in the following JSON format:
+
+${isCouple ? `{
+  "compatibilityScore": 85,
+  "scoreDescription": "Highly compatible with great potential",
+  "strengths": ["strength1", "strength2", "strength3", "strength4"],
+  "challenges": ["challenge1", "challenge2", "challenge3"],
+  "tips": ["tip1", "tip2", "tip3", "tip4", "tip5"]
+}` : `{
+  "compatibilityScore": 78,
+  "scoreDescription": "Strong team dynamics with minor adjustments needed",
+  "strengths": ["synergy1", "synergy2", "synergy3", "synergy4"],
+  "challenges": ["challenge1", "challenge2", "challenge3"],
+  "individualInsights": [
+    {"strength": "individual strength", "teamRole": "role description"},
+    {"strength": "individual strength", "teamRole": "role description"}
+  ],
+  "tips": ["collaboration tip1", "collaboration tip2", "collaboration tip3"]
+}`}
+
+Focus on:
+${isCouple ? `- Romantic compatibility and relationship dynamics
+- Communication styles and potential conflicts
+- Shared values and lifestyle compatibility
+- Growth opportunities as a couple` : `- Team collaboration and work dynamics
+- Individual strengths and how they complement each other
+- Communication styles in professional settings
+- Potential conflicts and how to resolve them
+- Optimal team roles for each member`}
+
+Calculate a realistic compatibility score (60-95%) based on MBTI compatibility research. Return ONLY valid JSON.`;
     } else {
       // Chat mode - enhanced for personality-focused conversations
       prompt = `You are NeuroChat, a friendly and insightful AI personality coach specialized in MBTI psychology. Your role is to provide warm, encouraging, and personalized guidance about personality development, relationships, career insights, and self-understanding.
@@ -108,8 +147,8 @@ Keep responses under 150 words and make them feel heard and understood. Use emoj
           }]
         }],
         generationConfig: {
-          temperature: type === 'assessment' ? 0.1 : 0.7,
-          maxOutputTokens: type === 'assessment' ? 1000 : 300,
+          temperature: type === 'assessment' || type === 'compatibility' ? 0.1 : 0.7,
+          maxOutputTokens: type === 'compatibility' ? 1500 : (type === 'assessment' ? 1000 : 300),
           topP: 0.8,
           topK: 10
         }
