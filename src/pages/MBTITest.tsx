@@ -44,7 +44,7 @@ const MBTITest = () => {
     if (unansweredQuestions.length > 0) {
       toast({
         title: "Please answer all questions",
-        description: You have ${unansweredQuestions.length} unanswered questions.,
+        description: `You have ${unansweredQuestions.length} unanswered questions.`,
         variant: "destructive",
       });
       return;
@@ -101,9 +101,9 @@ const MBTITest = () => {
             >
               {scaleLabels.map((label, index) => (
                 <div key={index + 1} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <RadioGroupItem value={(index + 1).toString()} id={option-${index + 1}} />
+                  <RadioGroupItem value={(index + 1).toString()} id={`option-${index + 1}`} />
                   <Label 
-                    htmlFor={option-${index + 1}} 
+                    htmlFor={`option-${index + 1}`}
                     className="flex-1 cursor-pointer text-sm font-medium"
                   >
                     <span className="text-neuro-primary font-semibold mr-2">{index + 1}.</span>
