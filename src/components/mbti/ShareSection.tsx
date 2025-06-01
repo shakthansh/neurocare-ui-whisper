@@ -36,50 +36,54 @@ const ShareSection = ({ personalityType, nickname }: ShareSectionProps) => {
 
   const handleDownload = () => {
     toast({
-      title: "📞 Contact Us",
+      title: "Let's Connect",
       description: (
         <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-          <p>👋 Get in touch with our team</p>
+          <p style={{ fontWeight: "bold", fontSize: "16px" }}>Shakthansh pandey</p>
           <p>
             📧 Email:{" "}
             <a
-              href="mailto:contact@neurocare.com"
+              href="mailto:shaktanshpandey84@gmail.com"
               style={{ color: '#1a0dab', textDecoration: 'underline' }}
             >
-              contact@neurocare.com
+              shaktanshpandey84@gmail.com
             </a>
           </p>
           <p>
-            📱 Phone:{" "}
+            💼 LinkedIn:{" "}
             <a
-              href="tel:+1234567890"
+              href="https://www.linkedin.com/in/shaktansh-pandey-7716212b5?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{ color: '#1a0dab', textDecoration: 'underline' }}
             >
-              +1 (234) 567-890
+              LinkedIn Profile
             </a>
           </p>
           <p>
             🌐 Website:{" "}
             <a
-              href="https://neurocare-ui-whisper.vercel.app"
+              href="https://www.richestman.xyz"
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: '#1a0dab', textDecoration: 'underline' }}
             >
-              neurocare-ui-whisper.vercel.app
+              www.richestman.xyz
             </a>
           </p>
           <p>
-            💼 Support:{" "}
+            📸 Instagram:{" "}
             <a
-              href="mailto:support@neurocare.com"
+              href="https://www.instagram.com/shakthansh?igsh=dHlneGFlOGZremlh"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{ color: '#1a0dab', textDecoration: 'underline' }}
             >
-              support@neurocare.com
+              @shakthansh
             </a>
           </p>
           <p style={{ fontStyle: "italic", marginTop: "8px" }}>
-            "We're here to help with your personality journey!"
+            "Building self-awareness, one log at a time."
           </p>
         </div>
       ),
