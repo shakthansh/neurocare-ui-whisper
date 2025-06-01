@@ -64,11 +64,22 @@ const handleShare = async () => {
 };
   
   const handleDownload = () => {
-    toast({
-      title: "Feature coming soon!",
-      description: "Instagram Story download will be available soon"
-    });
-  };
+  toast({
+    title: "Let's Connect!",
+    description: (
+      <div>
+        <p>Shakthansh Pandey</p>
+        <p>Email: <a href="mailto:shaktanshpandey84@gmail.com" style={{ color: 'lightblue', textDecoration: 'underline' }}>shaktanshpandey84@gmail.com</a></p>
+        <p>LinkedIn: <a href="https://www.linkedin.com/in/shaktansh-pandey-7716212b5" target="_blank" rel="noopener noreferrer" style={{ color: 'lightblue', textDecoration: 'underline' }}>linkedin.com/in/shaktansh-pandey</a></p>
+        <p>Website: <a href="https://www.richestman.xyz" target="_blank" rel="noopener noreferrer" style={{ color: 'lightblue', textDecoration: 'underline' }}>richestman.xyz</a></p>
+        <p>Instagram: <a href="https://www.instagram.com/shakthansh" target="_blank" rel="noopener noreferrer" style={{ color: 'lightblue', textDecoration: 'underline' }}>instagram.com/shakthansh</a></p>
+      </div>
+    ),
+    duration: 9000, // Keep it visible longer so people can read & click
+    isClosable: true,
+  });
+};
+
   const handleRetakeTest = () => {
     localStorage.removeItem('mbtiAnswers');
     navigate('/mbti-test');
