@@ -10,13 +10,6 @@ import { Languages } from 'lucide-react';
 
 const languages = {
   en: 'English',
-  es: 'Español',
-  fr: 'Français',
-  de: 'Deutsch',
-  zh: '中文',
-  ja: '日本語',
-  ko: '한국어',
-  ar: 'العربية',
   hi: 'हिन्दी'
 };
 
