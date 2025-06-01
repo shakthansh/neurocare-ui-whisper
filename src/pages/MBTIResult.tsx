@@ -41,27 +41,28 @@ const MBTIResultPage = () => {
     };
     processResults();
   }, [navigate, toast]);
-  const handleShare = async () => {
-    if (!result) return;
-    const shareText = `I just discovered I'm ${result.type} - ${result.nickname}! ${result.description} #NeuroCareMBTI #KnowYourself #PersonalityTest`;
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'My MBTI Result',
-          text: shareText,
-          url: window.location.href
-        });
-      } catch (error) {
-        console.log('Share cancelled');
-      }
-    } else {
-      navigator.clipboard.writeText(shareText);
-      toast({
-        title: "Copied to clipboard!",
-        description: "Share your result with friends"
+const handleShare = async () => {
+  if (!result) return;
+  const shareText = `I just discovered I'm ${result.type} - ${result.nickname}! ${result.description} #NeuroCareMBTI #KnowYourself #PersonalityTest`;
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'My MBTI Result',
+        text: shareText,
+        url: 'https://neurocare-ui-whisper.vercel.app/'  // fixed URL here
       });
+    } catch (error) {
+      console.log('Share cancelled');
     }
-  };
+  } else {
+    navigator.clipboard.writeText(shareText);
+    toast({
+      title: "Copied to clipboard!",
+      description: "Share your result with friends"
+    });
+  }
+};
+  
   const handleDownload = () => {
     toast({
       title: "Feature coming soon!",
