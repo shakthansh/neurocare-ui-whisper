@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { calculateMBTI, MBTIResult } from "@/utils/mbtiCalculator";
 import { useToast } from "@/hooks/use-toast";
 import NeuroChat from "@/components/NeuroChat";
+
 const MBTIResultPage = () => {
   const navigate = useNavigate();
   const {
@@ -41,85 +42,80 @@ const MBTIResultPage = () => {
     };
     processResults();
   }, [navigate, toast]);
-const handleShare = async () => {
-  if (!result) return;
-  const shareText = `I just discovered I'm ${result.type} - ${result.nickname}! ${result.description} #NeuroCareMBTI #KnowYourself #PersonalityTest`;
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: 'My MBTI Result',
-        text: shareText,
-        url: 'https://neurocare-ui-whisper.vercel.app/'  // fixed URL here
+  const handleShare = async () => {
+    if (!result) return;
+    const shareText = `I just discovered I'm ${result.type} - ${result.nickname}! ${result.description} #NeuroCareMBTI #KnowYourself #PersonalityTest`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My MBTI Result',
+          text: shareText,
+          url: 'https://neurocare-ui-whisper.vercel.app/'
+        });
+      } catch (error) {
+        console.log('Share cancelled');
+      }
+    } else {
+      navigator.clipboard.writeText(shareText);
+      toast({
+        title: "Copied to clipboard!",
+        description: "Share your result with friends"
       });
-    } catch (error) {
-      console.log('Share cancelled');
     }
-  } else {
-    navigator.clipboard.writeText(shareText);
-    toast({
-      title: "Copied to clipboard!",
-      description: "Share your result with friends"
-    });
-  }
-};
+  };
   
- const handleDownload = () => {
-  toast({
-    title: "🚀 Let’s Connect — Build Together!",
-    description: (
-      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-        <p>👋 Shakthansh Pandey</p>
-        <p>
-          📧 Email:{" "}
-          <a
-            href="mailto:shaktanshpandey84@gmail.com"
-            style={{ color: '#1a0dab', textDecoration: 'underline' }}
-          >
-            shaktanshpandey84@gmail.com
-          </a>
-        </p>
-        <p>
-          💼 LinkedIn:{" "}
-          <a
-            href="https://www.linkedin.com/in/shaktansh-pandey-7716212b5"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: '#1a0dab', textDecoration: 'underline' }}
-          >
-            linkedin.com/in/shaktansh-pandey
-          </a>
-        </p>
-        <p>
-          🌐 Website:{" "}
-          <a
-            href="https://www.richestman.xyz"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: '#1a0dab', textDecoration: 'underline' }}
-          >
-            richestman.xyz
-          </a>
-        </p>
-        <p>
-          📸 Instagram:{" "}
-          <a
-            href="https://www.instagram.com/shakthansh"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: '#1a0dab', textDecoration: 'underline' }}
-          >
-            instagram.com/shakthansh
-          </a>
-        </p>
-        <p style={{ fontStyle: "italic", marginTop: "8px" }}>
-          “Building self-awareness, one log at a time.”
-        </p>
-      </div>
-    ),
-    duration: 10000,
-    isClosable: true,
-  });
-};
+  const handleDownload = () => {
+    toast({
+      title: "📞 Contact Us",
+      description: (
+        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+          <p>👋 Get in touch with our team</p>
+          <p>
+            📧 Email:{" "}
+            <a
+              href="mailto:contact@neurocare.com"
+              style={{ color: '#1a0dab', textDecoration: 'underline' }}
+            >
+              contact@neurocare.com
+            </a>
+          </p>
+          <p>
+            📱 Phone:{" "}
+            <a
+              href="tel:+1234567890"
+              style={{ color: '#1a0dab', textDecoration: 'underline' }}
+            >
+              +1 (234) 567-890
+            </a>
+          </p>
+          <p>
+            🌐 Website:{" "}
+            <a
+              href="https://neurocare-ui-whisper.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#1a0dab', textDecoration: 'underline' }}
+            >
+              neurocare-ui-whisper.vercel.app
+            </a>
+          </p>
+          <p>
+            💼 Support:{" "}
+            <a
+              href="mailto:support@neurocare.com"
+              style={{ color: '#1a0dab', textDecoration: 'underline' }}
+            >
+              support@neurocare.com
+            </a>
+          </p>
+          <p style={{ fontStyle: "italic", marginTop: "8px" }}>
+            "We're here to help with your personality journey!"
+          </p>
+        </div>
+      ),
+      duration: 10000,
+    });
+  };
 
   const handleRetakeTest = () => {
     localStorage.removeItem('mbtiAnswers');
