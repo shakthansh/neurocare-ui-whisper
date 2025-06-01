@@ -45,8 +45,8 @@ const MBTITest = () => {
     const unansweredQuestions = mbtiQuestions.filter(q => !(q.id in answers));
     if (unansweredQuestions.length > 0) {
       toast({
-        title: "Please answer all questions",
-        description: `You have ${unansweredQuestions.length} unanswered questions.`,
+        title: t("mbtiTest.toast.unansweredTitle"),
+        description: t("mbtiTest.toast.unansweredDescription", { count: unansweredQuestions.length }),
         variant: "destructive",
       });
       return;
@@ -58,11 +58,11 @@ const MBTITest = () => {
   };
 
   const scaleLabels = [
-    "Strongly Disagree",
-    "Disagree", 
-    "Neutral",
-    "Agree",
-    "Strongly Agree"
+    t("mbtiTest.scale.stronglyDisagree"),
+    t("mbtiTest.scale.disagree"),
+    t("mbtiTest.scale.neutral"),
+    t("mbtiTest.scale.agree"),
+    t("mbtiTest.scale.stronglyAgree")
   ];
 
   return (
@@ -79,8 +79,10 @@ const MBTITest = () => {
             <ArrowLeft className="h-6 w-6 text-neuro-primary" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-neuro-primary">MBTI Test</h1>
-            <p className="text-sm text-gray-600">Question {currentQuestion + 1} of {totalQuestions}</p>
+            <h1 className="text-2xl font-bold text-neuro-primary">{t("mbtiTest.title")}</h1>
+            <p className="text-sm text-gray-600">
+              {t("mbtiTest.questionProgress", { current: currentQuestion + 1, total: totalQuestions })}
+            </p>
           </div>
         </div>
 
@@ -103,7 +105,7 @@ const MBTITest = () => {
             >
               {scaleLabels.map((label, index) => (
                 <div key={index + 1} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <RadioGroupItem value={(index + 1).toString()} id={`option-${index + 1}`} />
+                  <RadioGroupItem value={`${index + 1}`} id={`option-${index + 1}`} />
                   <Label 
                     htmlFor={`option-${index + 1}`}
                     className="flex-1 cursor-pointer text-sm font-medium"
@@ -126,7 +128,7 @@ const MBTITest = () => {
             className="flex items-center space-x-2"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span>Previous</span>
+            <span>{t("mbtiTest.navigation.previous")}</span>
           </Button>
 
           {currentQuestion === totalQuestions - 1 ? (
@@ -135,7 +137,7 @@ const MBTITest = () => {
               disabled={!answers[question.id]}
               className="bg-gradient-to-r from-primary-light to-neuro-primary hover:from-neuro-primary hover:to-primary-light text-white px-8"
             >
-              Submit Test
+              {t("mbtiTest.navigation.submit")}
             </Button>
           ) : (
             <Button
@@ -143,7 +145,7 @@ const MBTITest = () => {
               disabled={!answers[question.id]}
               className="flex items-center space-x-2 bg-gradient-to-r from-primary-light to-neuro-primary hover:from-neuro-primary hover:to-primary-light text-white"
             >
-              <span>Next</span>
+              <span>{t("mbtiTest.navigation.next")}</span>
               <ArrowRight className="h-4 w-4" />
             </Button>
           )}

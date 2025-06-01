@@ -28,5 +28,70 @@
         "description": "Mide tu capacidad para entender y gestionar las emociones de manera efectiva."
       }
     }
+  },
+  "testStart": {
+    "title": "Antes de Comenzar",
+    "description": "Personalicemos tu experiencia",
+    "nameLabel": "Tu Nombre",
+    "namePlaceholder": "Ingresa tu nombre",
+    "languageLabel": "Idioma Preferido",
+    "languagePlaceholder": "Selecciona un idioma",
+    "startButton": "Comenzar Test",
+    "toast": {
+      "title": "¡Bienvenido!",
+      "description": "Hola {{name}}, tu test está comenzando..."
+    }
+  },
+  "mbtiTest": {
+    "title": "Test de Personalidad MBTI",
+    "questionProgress": "Pregunta {{current}} de {{total}}",
+    "scale": {
+      "stronglyDisagree": "Totalmente en Desacuerdo",
+      "disagree": "En Desacuerdo",
+      "neutral": "Neutral",
+      "agree": "De Acuerdo",
+      "stronglyAgree": "Totalmente de Acuerdo"
+    },
+    "navigation": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "submit": "Enviar Test"
+    },
+    "toast": {
+      "unansweredTitle": "Por favor responde todas las preguntas",
+      "unansweredDescription": "Tienes {{count}} preguntas sin responder"
+    }
+  },
+  "questions": {
+    "1": "Prefiero el tiempo tranquilo a solas para recargarme en lugar de reuniones sociales.",
+    "2": "Me resulta fácil iniciar conversaciones con extraños.",
+    "3": "A menudo pienso antes de hablar.",
+    "4": "Disfruto siendo el centro de atención.",
+    "5": "Prefiero las conversaciones profundas al small talk.",
+    "6": "Confío más en los hechos y detalles que en las teorías e ideas.",
+    "7": "Pienso más en las posibilidades futuras que en las realidades presentes.",
+    "8": "Prefiero las tareas prácticas a la lluvia de ideas imaginativa.",
+    "9": "Disfruto de los conceptos abstractos y el simbolismo.",
+    "10": "Me centro en lo que está sucediendo ahora más que en lo que podría suceder después.",
+    "11": "Tomo decisiones basadas en la lógica más que en las emociones.",
+    "12": "Valoro la armonía y trato de evitar el conflicto.",
+    "13": "Puedo ser muy objetivo, incluso si hiere los sentimientos de alguien.",
+    "14": "Considero los sentimientos de los demás al tomar decisiones.",
+    "15": "Creo que la verdad es más importante que el tacto.",
+    "16": "Me gusta tener un plan en lugar de ser espontáneo.",
+    "17": "Prefiero mantener mis opciones abiertas el mayor tiempo posible.",
+    "18": "Me gusta terminar las tareas mucho antes de la fecha límite.",
+    "19": "Me adapto fácilmente a los cambios de planes.",
+    "20": "Me siento incómodo cuando las cosas están desorganizadas.",
+    "21": "Disfruto más resolviendo problemas complejos que socializando.",
+    "22": "Confío más en mis corazonadas que en el análisis lógico.",
+    "23": "Suelo ser puntual y valoro los horarios.",
+    "24": "Me gusta explorar nuevas ideas, aunque parezcan poco prácticas.",
+    "25": "Prefiero trabajar en un entorno estructurado.",
+    "26": "A menudo pongo las necesidades de otros antes que las mías.",
+    "27": "Disfruto debatiendo ideas para encontrar la mejor respuesta.",
+    "28": "Me siento energizado después de pasar tiempo con amigos.",
+    "29": "A menudo reflexiono profundamente sobre mis emociones.",
+    "30": "Prefiero mantener las cosas flexibles y abiertas."
   }
 }

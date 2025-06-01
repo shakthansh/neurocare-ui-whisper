@@ -36,6 +36,62 @@
     "namePlaceholder": "Enter your name",
     "languageLabel": "Preferred Language",
     "languagePlaceholder": "Select a language",
-    "startButton": "Start Test"
+    "startButton": "Start Test",
+    "toast": {
+      "title": "Welcome!",
+      "description": "Hi {{name}}, your test is starting..."
+    }
+  },
+  "mbtiTest": {
+    "title": "MBTI Personality Test",
+    "questionProgress": "Question {{current}} of {{total}}",
+    "scale": {
+      "stronglyDisagree": "Strongly Disagree",
+      "disagree": "Disagree",
+      "neutral": "Neutral",
+      "agree": "Agree",
+      "stronglyAgree": "Strongly Agree"
+    },
+    "navigation": {
+      "previous": "Previous",
+      "next": "Next",
+      "submit": "Submit Test"
+    },
+    "toast": {
+      "unansweredTitle": "Please answer all questions",
+      "unansweredDescription": "You have {{count}} unanswered questions"
+    }
+  },
+  "questions": {
+    "1": "I prefer quiet time alone to recharge rather than social gatherings.",
+    "2": "I find it easy to start conversations with strangers.",
+    "3": "I often think before I speak.",
+    "4": "I enjoy being the center of attention.",
+    "5": "I prefer deep conversations over small talk.",
+    "6": "I trust facts and details more than theories and ideas.",
+    "7": "I often think about future possibilities more than present realities.",
+    "8": "I prefer practical tasks to imaginative brainstorming.",
+    "9": "I enjoy abstract concepts and symbolism.",
+    "10": "I focus on what is happening now rather than what might happen later.",
+    "11": "I make decisions based on logic rather than emotions.",
+    "12": "I value harmony and try to avoid conflict.",
+    "13": "I can be very objective, even if it hurts someone's feelings.",
+    "14": "I consider others' feelings when making decisions.",
+    "15": "I believe truth is more important than tact.",
+    "16": "I like to have a plan rather than be spontaneous.",
+    "17": "I prefer to keep my options open as long as possible.",
+    "18": "I like to finish tasks well before the deadline.",
+    "19": "I adapt easily to changes in plans.",
+    "20": "I feel uncomfortable when things are unorganized.",
+    "21": "I enjoy solving complex problems more than socializing.",
+    "22": "I trust my gut feelings more than logical analysis.",
+    "23": "I am usually punctual and value schedules.",
+    "24": "I like exploring new ideas, even if they seem impractical.",
+    "25": "I prefer to work in a structured environment.",
+    "26": "I often put others' needs before my own.",
+    "27": "I enjoy debating ideas to find the best answer.",
+    "28": "I feel energized after spending time with friends.",
+    "29": "I often reflect on my emotions deeply.",
+    "30": "I prefer to keep things flexible and open-ended."
   }
 }
